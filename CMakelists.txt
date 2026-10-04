@@ -1,0 +1,53 @@
+cmake_minimum_required(VERSION 3.20)
+project(arx_electricity_project LANGUAGES CXX)
+
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
+set(ARX_SDK_DIR "C:/ObjectARX" CACHE PATH "ObjectARX SDK root")
+set(ARX_LIB_DIR "${ARX_SDK_DIR}/lib-x64")
+
+set(ARX_LIBS
+    "${ARX_LIB_DIR}/rxapi.lib"
+    "${ARX_LIB_DIR}/accore.lib"
+    "${ARX_LIB_DIR}/acdb24.lib"
+    "${ARX_LIB_DIR}/acad.lib"
+    "${ARX_LIB_DIR}/acge24.lib"
+    "${ARX_LIB_DIR}/acgiapi.lib"
+    "${ARX_LIB_DIR}/ac1st24.lib"
+)
+
+foreach(LIB ${ARX_LIBS})
+    if(NOT EXISTS "${LIB}")
+        message(WARNING "Библиотека не найдена: ${LIB}")
+    endif()
+endforeach()
+
+add_library(arx_electricity_project SHARED
+    src/acrxEntryPoint.cpp
+    src/ObjectARXWrapper.cpp
+    src/ConsoleUI.cpp 
+    src/BlockFactory.cpp
+    include/IAcadAPI.h
+    include/ObjectARXWrapper.h
+    include/Manager.h
+)
+
+target_include_directories(arx_electricity_project PRIVATE
+    "${CMAKE_CURRENT_SOURCE_DIR}/include"
+    "${ARX_SDK_DIR}/inc"
+    "${ARX_SDK_DIR}/inc-x64"
+)
+
+target_link_libraries(arx_electricity_project PRIVATE ${ARX_LIBS})
+
+target_sources(arx_electricity_project PRIVATE src/arx_electricity_project.def)
+
+set_target_properties(arx_electricity_project PROPERTIES
+    PREFIX ""
+    SUFFIX ".arx"
+    OUTPUT_NAME "arx_electricity_project"
+)
+# Remove-Item -Recurse -Force build
+# cmake -B build -DARX_SDK_DIR="C:/ObjectARX"
+# cmake --build build --config Release

@@ -1,0 +1,4 @@
+LIBRARY arx_electricity_project
+EXPORTS
+    acrxEntryPoint PRIVATE
+    acrxGetApiVersion PRIVATE
