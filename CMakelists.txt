@@ -3,6 +3,8 @@ project(arx_electricity_project LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreadedDLL")
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 set(ARX_SDK_DIR "C:/ObjectARX" CACHE PATH "ObjectARX SDK root")
 set(ARX_LIB_DIR "${ARX_SDK_DIR}/lib-x64")
@@ -26,11 +28,14 @@ endforeach()
 add_library(arx_electricity_project SHARED
     src/acrxEntryPoint.cpp
     src/ObjectARXWrapper.cpp
-    src/ConsoleUI.cpp 
+    src/ConsoleUI.cpp
     src/BlockFactory.cpp
+    src/Manager.cpp
     include/IAcadAPI.h
     include/ObjectARXWrapper.h
     include/Manager.h
+    include/BlockFactory.h
+    include/ConsoleUI.h
 )
 
 target_include_directories(arx_electricity_project PRIVATE
@@ -38,6 +43,9 @@ target_include_directories(arx_electricity_project PRIVATE
     "${ARX_SDK_DIR}/inc"
     "${ARX_SDK_DIR}/inc-x64"
 )
+
+target_compile_definitions(arx_electricity_project PRIVATE UNICODE _UNICODE)
+target_compile_options(arx_electricity_project PRIVATE /bigobj)
 
 target_link_libraries(arx_electricity_project PRIVATE ${ARX_LIBS})
 
@@ -48,6 +56,7 @@ set_target_properties(arx_electricity_project PROPERTIES
     SUFFIX ".arx"
     OUTPUT_NAME "arx_electricity_project"
 )
+
 # Remove-Item -Recurse -Force build
-# cmake -B build -DARX_SDK_DIR="C:/ObjectARX"
+# cmake -B build -G "Visual Studio 16 2019" -A x64 -DARX_SDK_DIR="C:/ObjectARX"
 # cmake --build build --config Release

@@ -7,8 +7,6 @@
 #include <gepnt3d.h>     // AcGePoint3d — нужен по значению
 #include <dbmain.h>      // AcDbObjectId — нужен для kNull
 
-// #include <gepnt3d.h>     // полное определение AcGePoint3d
-
 class Manager {
 public:
     explicit Manager(IAcadAPI& api) : m_api(api) {}
@@ -17,13 +15,14 @@ public:
         m_api.logMessage(L"[Manager] Запрос параметров круга", false);
 
         AcGePoint3d center;
-        double radius;
+        double radius = 0.0;
 
         // Запрос центра
         if (!ConsoleUI::GetPoint(L"\nУкажите центр круга: ", center)) {
             m_api.logMessage(L"Операция отменена пользователем", true);
             return;
         }
+
         // Запрос радиуса
         if (!ConsoleUI::GetReal(L"\nВведите радиус: ", radius)) {
             m_api.logMessage(L"Операция отменена пользователем", true);
@@ -35,7 +34,8 @@ public:
         }
 
         // Транзакция
-        ObjectARXWrapper::TransactionGuard guard(static_cast<ObjectARXWrapper&>(m_api));
+        ObjectARXWrapper::TransactionGuard guard(
+            static_cast<ObjectARXWrapper&>(m_api));
 
         // Создаём круг через фабрику
         AcDbObjectId id = BlockFactory::CreateCircle(center, radius, m_api);

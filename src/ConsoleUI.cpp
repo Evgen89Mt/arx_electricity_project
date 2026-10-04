@@ -1,5 +1,9 @@
-// ConsoleUI.cpp
 #include "ConsoleUI.h"
+
+#include <adscodes.h>   // RTNORM
+#include <aced.h>       // acedGetPoint, acedGetReal
+#include <geassign.h>   // asPnt3d
+#include <dbmain.h>     // ads_point
 
 bool ConsoleUI::GetPoint(const wchar_t* prompt, AcGePoint3d& pt) {
     ads_point adsPt;

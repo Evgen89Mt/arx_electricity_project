@@ -1,36 +1,35 @@
 #pragma once
 
 /*
-	IAcadAPI.h
-	Абстрактный интерфейс, инкапсулирующий все взаимодействия с AutoCAD
-	Позволяет тестировать бизнес-логику и тестировать реализацию.
+    IAcadAPI.h
+    Абстрактный интерфейс, инкапсулирующий взаимодействие с AutoCAD.
+    Позволяет тестировать бизнес-логику и подменять реализацию.
 */
 
-class AcDbEntity;
-class AcDbObjectId;
+#include <dbmain.h>     // AcDbObjectId определён здесь
+
+class AcDbEntity;       // forward — используется только по указателю
 
 class IAcadAPI {
 public:
-	virtual ~IAcadAPI() = default;
+    virtual ~IAcadAPI() = default;
 
-	// Добавить сущность в пространство модели (или текущие пространство)
-	// Возращает ObjectId ссылки из базы пространства или 0 - error
-	virtual AcDbObjectId addEntity(AcDbEntity* pEnt) = 0;
+    // Добавить сущность в текущее пространство.
+    // Возвращает ObjectId или kNull при ошибке.
+    virtual AcDbObjectId addEntity(AcDbEntity* pEnt) = 0;
 
-	// Установить текущим слой, при необходимости создать его
-	// colorIndex - цвет слоя (по умолчанию ByLayer)
-	virtual void setLayer(const wchar_t* layerName, int indexColor = 256) = 0;
+    // Установить текущий слой, при необходимости создать его.
+    // colorIndex — индекс цвета слоя (256 = ByLayer).
+    virtual void setLayer(const wchar_t* layerName, int indexColor = 256) = 0;
 
-	// Группа операций для атомарного выполнения/отката
-	virtual void startTransaction() = 0;
-	virtual void commitTransaction() = 0;
-	virtual void abortTransaction() = 0;
+    // Транзакции
+    virtual void startTransaction() = 0;
+    virtual void commitTransaction() = 0;
+    virtual void abortTransaction() = 0;
 
-	// Убедимся в загрузки типа линии в БД пространства
-	virtual void ensureLinetype(const wchar_t* linetypeName) = 0;
+    // Проверить наличие типа линии в БД.
+    virtual void ensureLinetype(const wchar_t* linetypeName) = 0;
 
-	// Логирование сообщений (в командную строку Autocad или можно в файл)
-	// isError - маркер ошибки (для выделения)
-	virtual void logMessage(const wchar_t* msg, bool isError = false) = 0;
+    // Логирование (в командную строку AutoCAD).
+    virtual void logMessage(const wchar_t* msg, bool isError = false) = 0;
 };
-
