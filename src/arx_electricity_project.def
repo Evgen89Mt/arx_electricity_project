@@ -1,4 +1,4 @@
-LIBRARY arx_electricity_project
+LIBRARY arx_electricity_project.arx
 EXPORTS
     acrxEntryPoint PRIVATE
     acrxGetApiVersion PRIVATE

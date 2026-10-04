@@ -17,6 +17,7 @@ set(ARX_LIBS
     "${ARX_LIB_DIR}/acge24.lib"
     "${ARX_LIB_DIR}/acgiapi.lib"
     "${ARX_LIB_DIR}/ac1st24.lib"
+    "${ARX_LIB_DIR}/AcPal.lib"          # <-- добавить
 )
 
 foreach(LIB ${ARX_LIBS})
